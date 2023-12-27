@@ -110,3 +110,7 @@ cleaned_date_times_data = cleaner.clean_date_times_data(date_times_data)
 # Upload cleaned date and time details to the database
 engine = connector.init_db_engine()
 connector.upload_to_db(engine, 'dim_date_times', cleaned_date_times_data)
+
+orders_table = DataCleaning.clean_orders_data(orders_table)
+
+dim_users_table = DataCleaning.clean_dim_users_data(dim_users_table)

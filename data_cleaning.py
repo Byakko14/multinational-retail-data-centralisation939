@@ -72,6 +72,25 @@ class DataCleaning:
         """
         # Remove specified columns
         cleaned_orders_data = orders_data.drop(columns=['first_name', 'last_name', '1'], errors='ignore')
+
+        # Cast columns to the correct data types
+        data_types = {
+            'date_uuid': 'UUID',
+            'user_uuid': 'UUID',
+            'card_number': 'VARCHAR(16)',  # Replace 16 with the actual max length
+            'store_code': 'VARCHAR(?)',   # Replace ? with the actual max length
+            'product_code': 'VARCHAR(?)', # Replace ? with the actual max length
+            'product_quantity': 'SMALLINT'
+        }
+
+        for column, data_type in data_types.items():
+            if data_type.startswith('VARCHAR'):
+                # Extract the length from the VARCHAR type
+                length = int(data_type[data_type.find('(') + 1:data_type.find(')')])
+                cleaned_orders_data[column] = cleaned_orders_data[column].astype(data_type.format(length))
+            else:
+                cleaned_orders_data[column] = cleaned_orders_data[column].astype(data_type)
+
         return cleaned_orders_data
     
     @staticmethod
@@ -89,3 +108,36 @@ class DataCleaning:
         # Placeholder, replace with actual cleaning logic
         cleaned_data = date_times_data
         return cleaned_data
+    
+    @staticmethod
+    def clean_dim_users_data(dim_users_data):
+        """
+        Clean dim_users_table data.
+
+        Parameters:
+        - dim_users_data (pd.DataFrame): dim_users_table DataFrame.
+
+        Returns:
+        - pd.DataFrame: Cleaned dim_users_table data.
+        """
+        # Your existing cleaning logic...
+
+        # Cast columns to the correct data types
+        data_types = {
+            'first_name': 'VARCHAR(255)',
+            'last_name': 'VARCHAR(255)',
+            'date_of_birth': 'DATE',
+            'country_code': 'VARCHAR(?)',   # Replace ? with the actual max length
+            'user_uuid': 'UUID',
+            'join_date': 'DATE'
+        }
+
+        for column, data_type in data_types.items():
+            if data_type.startswith('VARCHAR'):
+                # Extract the length from the VARCHAR type
+                length = int(data_type[data_type.find('(') + 1:data_type.find(')')])
+                dim_users_data[column] = dim_users_data[column].astype(data_type.format(length))
+            else:
+                dim_users_data[column] = dim_users_data[column].astype(data_type)
+
+        return dim_users_data
