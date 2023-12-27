@@ -2,6 +2,7 @@ import csv
 import boto3
 import pandas as pd
 import tabula
+from io import StringIO
 
 class DataExtractor:
     @staticmethod
@@ -52,7 +53,7 @@ class DataExtractor:
         response = requests.get(endpoint, headers=headers)
         stores_data = response.json()
         return pd.DataFrame(stores_data['stores'])
-        
+
     @staticmethod
     def extract_from_s3(s3_address):
         """
