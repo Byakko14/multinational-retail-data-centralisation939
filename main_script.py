@@ -4,6 +4,7 @@ from data_cleaning import DataCleaning
 import boto3
 import pandas as pd
 from io import StringIO
+import psycopg2
 
 # Create instances
 connector = DatabaseConnector()
@@ -114,3 +115,44 @@ connector.upload_to_db(engine, 'dim_date_times', cleaned_date_times_data)
 orders_table = DataCleaning.clean_orders_data(orders_table)
 
 dim_users_table = DataCleaning.clean_dim_users_data(dim_users_table)
+
+def execute_sql_script(script_path, connection_params):
+    """
+    Execute an SQL script.
+
+    Parameters:
+    - script_path (str): Path to the SQL script file.
+    - connection_params (dict): Database connection parameters.
+
+    Returns:
+    - None
+    """
+    # Establish a database connection
+    conn = psycopg2.connect(**connection_params)
+    cursor = conn.cursor()
+
+    # Read and execute the SQL script
+    with open(script_path, "r") as file:
+        sql_script = file.read()
+        cursor.execute(sql_script)
+
+    # Commit the changes and close the connection
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+if __name__ == "__main__":
+    # Replace these with your actual database connection parameters
+    database_params = {
+        'database': 'your_database',
+        'user': 'your_user',
+        'password': 'your_password',
+        'host': 'your_host',
+        'port': 'your_port'
+    }
+
+    # Execute the dim_products_update SQL script
+    execute_sql_script("/Users/Rit/Workspace/Retail-Data/dim_products_update.sql", database_params)
+
+    # Execute the store_detail_update SQL script
+    execute_sql_script("/Users/Rit/Workspace/Retail-Data/store_detail_update.sql", database_params)

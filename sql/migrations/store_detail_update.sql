@@ -13,7 +13,7 @@ CREATE DATABASE sales_data
     CONNECTION LIMIT = -1
     IS_TEMPLATE = False;
 	
-	-- Merge one latitude column into the other
+-- Merge one latitude column into the other
 UPDATE store_details_table
 SET latitude = COALESCE(latitude1, latitude2)
 WHERE latitude IS NULL;

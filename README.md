@@ -1,81 +1,65 @@
-# multinational-retail-data-centralisation939
+# Multinational Retail Data Centralization Project
 
 ## Table of Contents
-- [Description](#description)
+- [Project Overview](#project-overview)
 - [Installation](#installation)
 - [Usage](#usage)
 - [File Structure](#file-structure)
+- [Database Schema](#database-schema)
 - [License](#license)
 
-## Description
-The Retail Data Centralization project aims to centralize and manage data from various sources, including AWS RDS, S3, API, and more. This project includes scripts and classes for data extraction, cleaning, and storage in a PostgreSQL database.
+## Project Overview
+This project aims to centralize and manage retail data from multiple sources using a star-based database schema. The data is extracted, cleaned, and stored in a PostgreSQL database using Python scripts.
 
 ## Installation
-1. Clone the repository:
+1. Clone this repository.
+2. Install the required Python packages:
    ```bash
-   git clone https://github.com/Byakko14/multinational-retail-data-centralisation939.git
-   cd multinational-retail-data-centralisation939
-
-
-Certainly! Below is a template for your README file based on the information you provided earlier. Please replace the placeholders with the actual information about your project.
-
-markdown
-Copy code
-# Retail Data Centralization Project
-
-## Table of Contents
-- [Description](#description)
-- [Installation](#installation)
-- [Usage](#usage)
-- [File Structure](#file-structure)
-- [License](#license)
-
-## Description
-The Retail Data Centralization project aims to centralize and manage data from various sources, including AWS RDS, S3, API, and more. This project includes scripts and classes for data extraction, cleaning, and storage in a PostgreSQL database.
-
-## Installation
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/Byakko14/multinational-retail-data-centralisation939.git
-   cd multinational-retail-data-centralisation939
-Install dependencies:
-
-bash
-Copy code
-pip install -r requirements.txt
-Configure your database credentials:
-
-Create a db_creds.yaml file with the following structure:
-yaml
-Copy code
-RDS_HOST: data-handling-project-readonly.cq2e8zno855e.eu-west-1.rds.amazonaws.com
-RDS_PASSWORD: AiCore2022
-RDS_USER: aicore_admin
-RDS_DATABASE: postgres
-RDS_PORT: 5432
-Add db_creds.yaml to your .gitignore file to avoid exposing sensitive information.
-
+   pip install -r requirements.txt
+Set up your database and configure the credentials in the db_creds.yaml file.
 Usage
-Data Extraction:
+Run the Python scripts in the following order:
 
-data_extraction.py: Contains the DataExtractor class for extracting data from various sources (CSV, API, S3, AWS RDS).
-Database Connection and Uploading:
+data_extraction.py for extracting data from various sources.
+data_cleaning.py for cleaning the extracted data.
+database_utils.py for connecting to the database and managing data upload.
+main_script.py for orchestrating the data processing flow.
+Update the database schema by executing SQL scripts in the sql/migrations folder.
 
-database_utils.py: Includes the DatabaseConnector class for connecting to the database and uploading data.
-Data Cleaning:
-
-data_cleaning.py: Provides the DataCleaning class with methods for cleaning extracted data.
-Main Script:
-
-main_script.py: Integrates data extraction, cleaning, and uploading. Modify this script based on your specific data sources and requirements.
 File Structure
-data_extraction.py: Data extraction utility class.
-database_utils.py: Database connection utility class.
-data_cleaning.py: Data cleaning utility class.
-main_script.py: Main script integrating extraction, cleaning, and uploading.
-db_creds.yaml: Database credentials configuration file (added to .gitignore).
-requirements.txt: List of project dependencies.
-... (other files and folders)
+lua
+Copy code
+project_root/
+|-- data_extraction.py
+|-- data_cleaning.py
+|-- database_utils.py
+|-- main_script.py
+|-- sql/
+|   |-- migrations/
+|       |-- dim_users_data_types.sql
+|       |-- dim_store_details_data_types.sql
+|       |-- dim_products_data_types.sql
+|       |-- dim_date_times_data_types.sql
+|       |-- dim_card_details_data_types.sql
+|       |-- primary_keys_foreign_keys.sql
+|-- db_creds.yaml
+|-- README.md
+|-- requirements.txt
+Database Schema
+The project follows a star-based database schema with the following main tables:
+
+dim_users_table
+dim_store_details
+dim_products
+dim_date_times
+dim_card_details
+orders_table
+For details on data types, primary keys, and foreign keys, refer to the SQL scripts in the sql/migrations folder.
 
 License
 This project is licensed under the MIT License.
+
+sql
+Copy code
+
+Copy and paste this content into your README.md file. If you have any additional inf
