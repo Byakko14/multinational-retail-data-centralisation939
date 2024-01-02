@@ -120,7 +120,6 @@ class DataCleaning:
         Returns:
         - pd.DataFrame: Cleaned dim_users_table data.
         """
-        # Your existing cleaning logic...
 
         # Cast columns to the correct data types
         data_types = {
