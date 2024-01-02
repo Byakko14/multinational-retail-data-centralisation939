@@ -152,7 +152,25 @@ if __name__ == "__main__":
     }
 
     # Execute the dim_products_update SQL script
-    execute_sql_script("/Users/Rit/Workspace/Retail-Data/dim_products_update.sql", database_params)
+    execute_sql_script("/Users/Rit/Workspace/Retail-Data/sql/migrations/dim_products_update.sql", database_params)
 
     # Execute the store_detail_update SQL script
-    execute_sql_script("/Users/Rit/Workspace/Retail-Data/store_detail_update.sql", database_params)
+    execute_sql_script("/Users/Rit/Workspace/Retail-Data/sql/migrations/store_detail_update.sql", database_params)
+
+    # Execute the dim_card_details_data_types SQL script
+    execute_sql_script("/Users/Rit/Workspace/Retail-Data/sql/migrations/dim_card_details_data_types.sql", database_params)
+
+    # Execute the dim_date_times_data_types SQL script
+    execute_sql_script("/Users/Rit/Workspace/Retail-Data/sql/migrations/dim_date_times_data_types.sql", database_params)
+    
+    # Execute the dim_products_data_types SQL script
+    execute_sql_script("/Users/Rit/Workspace/Retail-Data/sql/migrations/dim_products_data_types.sql", database_params)
+
+    # Execute the dim_users_data_types SQL script
+    execute_sql_script("/Users/Rit/Workspace/Retail-Data/sql/migrations/dim_users_data_types.sql", database_params)
+
+    # Execute the primary_keys_foreign_keys SQL script
+    execute_sql_script("/Users/Rit/Workspace/Retail-Data/sql/migrations/primary_keys_foreign_keys.sql", database_params)
+
+    # Execute the dim_store_details_data_types SQL script
+    execute_sql_script("/Users/Rit/Workspace/Retail-Data/sql/migrations/dim_store_details_data_types.sql", database_params)
