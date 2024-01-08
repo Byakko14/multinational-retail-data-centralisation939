@@ -18,7 +18,7 @@ class DatabaseConnector:
 
     def init_db_engine(self):
         # Initialize and return a SQLAlchemy database engine using credentials
-        db_url = f"postgresql://{self.credentials['RDS_USER']}:{self.credentials['RDS_PASSWORD']}@{self.credentials['RDS_HOST']}:{self.credentials['RDS_PORT']}/{self.credentials['RDS_DATABASE']}"
+        db_url = f"postgresql://{self.credentials['postgres']}:{self.credentials['R!tCh@n1404']}@{self.credentials['localhost']}:{self.credentials['5432']}/{self.credentials['sales_data']}"
         return create_engine(db_url)
 
     def list_db_tables(self, engine):
