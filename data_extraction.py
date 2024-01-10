@@ -1,3 +1,4 @@
+import tabula
 import pandas as pd
 from sqlalchemy import create_engine
 
@@ -13,3 +14,12 @@ class DataExtractor():
         """
         query = f"SELECT * FROM {table_name}"
         return pd.read_sql(query, self.engine)
+    
+    def retrieve_pdf_data(self, pdf_link):
+        # Use tabula to extract data from the PDF
+        pdf_data = tabula.read_pdf(pdf_link, pages='all', multiple_tables=True)
+
+        # Combine all extracted tables into a single DataFrame
+        extracted_data = pd.concat(pdf_data, ignore_index=True)
+
+        return extracted_data

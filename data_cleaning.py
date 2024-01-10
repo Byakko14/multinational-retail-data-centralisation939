@@ -18,10 +18,14 @@ class DataCleaning:
 
         # Convert 'phone_number' to numeric (assuming it's a numeric column)
         cleaned_data['phone_number'] = pd.to_numeric(cleaned_data['phone_number'], errors='coerce')
-        
+
         # Drop the 'index' column if it exists
         cleaned_data = cleaned_data.drop(columns=['index'], errors='ignore')
 
         # Additional cleaning logic for other columns if needed
 
         return cleaned_data
+    
+    def clean_card_data(data):
+        # Drop rows with any NULL values
+        cleaned_data = data.dropna()

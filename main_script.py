@@ -26,3 +26,14 @@ print(cleaned_user_data)
 
 # Upload cleaned user data to 'dim_users' table
 db_connector.upload_to_db(cleaned_user_data, 'dim_users', target_database=True)
+
+#Retrieve data from PDF
+pdf_link = "/Users/Rit/Workspace/Retail-Data/card_details.pdf"
+data_extractor = DataExtractor(db_connector)
+pdf_data = data_extractor.retrieve_pdf_data(pdf_link)
+
+#Clean card data
+cleaned_card_data = data_cleaning.clean_card_data(pdf_data)
+
+#Upload cleaned data to the database
+db_connector.upload_to_db(cleaned_card_data, 'dim_card_details', target_database=True)
