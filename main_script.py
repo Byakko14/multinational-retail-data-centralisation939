@@ -1,176 +1,28 @@
 from database_utils import DatabaseConnector
 from data_extraction import DataExtractor
 from data_cleaning import DataCleaning
-import boto3
-import pandas as pd
-from io import StringIO
-import psycopg2
 
-# Create instances
-connector = DatabaseConnector()
-extractor = DataExtractor()
-cleaner = DataCleaning()
+# Assuming db_connector is an instance of DatabaseConnector
+db_connector = DatabaseConnector(source_creds_file='db_creds.yaml', target_creds_file='local_db_creds.yaml')
 
-# PDF document link
-pdf_link = 'your_pdf_link_here'
+# Create a DataExtractor instance
+data_extractor = DataExtractor(db_connector)
 
-# Retrieve card data from PDF
-card_data = extractor.retrieve_pdf_data(pdf_link)
+# Assuming the table containing user data is named 'legacy_users'
+user_table_name = 'legacy_users'
 
-# Clean card data
-cleaned_card_data = cleaner.clean_card_data(card_data)
+# Extract data from the user table
+user_data = data_extractor.read_rds_table(user_table_name)
 
-# Upload cleaned card data to the database
-engine = connector.init_db_engine()
-connector.upload_to_db(engine, 'dim_card_details', cleaned_card_data)
+# Create a DataCleaning instance
+data_cleaner = DataCleaning()
 
-# API details
-number_of_stores_endpoint = 'https://aqj7u5id95.execute-api.eu-west-1.amazonaws.com/prod/number_stores'
-api_headers = {'x-api-key': 'yFBQbwXe9J3sd6zWVAMrK6lcxxr0q1lr2PT6DDMX'}
-retrieve_stores_endpoint = 'https://aqj7u5id95.execute-api.eu-west-1.amazonaws.com/prod/store_details/{store_number}'
+# Clean the user data
+cleaned_user_data = data_cleaner.clean_user_data(user_data)
 
-# Get the number of stores
-num_stores = extractor.list_number_of_stores(number_of_stores_endpoint, api_headers)
-print(f"Number of stores: {num_stores}")
+# Display the cleaned user data
+print("Cleaned User data:")
+print(cleaned_user_data)
 
-# Retrieve store data from the API
-stores_data = extractor.retrieve_stores_data(retrieve_stores_endpoint, api_headers)
-
-# Clean store data
-cleaned_stores_data = cleaner._clean_store_data(stores_data)
-
-# Upload cleaned store data to the database
-engine = connector.init_db_engine()
-connector.upload_to_db(engine, 'dim_store_details', cleaned_stores_data)
-
-# S3 address for products data
-s3_products_address = 's3://data-handling-public/products.csv'
-
-# Extract product data from S3
-products_data = extractor.extract_from_s3(s3_products_address)
-
-# Convert and clean product weights
-converted_products_data = cleaner.convert_product_weights(products_data)
-
-# Clean product data
-cleaned_products_data = cleaner.clean_products_data(converted_products_data)
-
-# Upload cleaned product data to the database
-engine = connector.init_db_engine()
-connector.upload_to_db(engine, 'dim_products', cleaned_products_data)
-
-# List all tables in the connected database
-engine = connector.init_db_engine()
-tables = connector.list_db_tables(engine)
-print("Tables in the database:", tables)
-
-# Get the name of the table containing orders data
-orders_table_name = 'your_orders_table_name'  # Replace with the actual table name
-
-# Extract orders data from the RDS database
-orders_data = extractor.read_rds_table(connector, orders_table_name)
-
-# Clean orders data
-cleaned_orders_data = cleaner.clean_orders_data(orders_data)
-
-# Upload cleaned orders data to the database
-engine = connector.init_db_engine()
-connector.upload_to_db(engine, 'orders_table', cleaned_orders_data)
-
-@staticmethod
-def extract_from_s3_json(s3_link):
-    """
-    Extract date and time details from a JSON file on S3.
-
-    Parameters:
-    - s3_link (str): S3 link to the JSON file.
-
-    Returns:
-    - pd.DataFrame: Extracted date and time details.
-    """
-    # Initialize an S3 client
-    s3 = boto3.client('s3')
-
-    # Extract data from S3 bucket
-    response = s3.get_object(Bucket='data-handling-public', Key='date_details.json')
-    json_content = response['Body'].read().decode('utf-8')
-
-    # Read JSON content into a pandas DataFrame
-    date_times_data = pd.read_json(StringIO(json_content))
-    return date_times_data
-
-# S3 link for date and time details
-s3_date_times_link = 'https://data-handling-public.s3.eu-west-1.amazonaws.com/date_details.json'
-
-# Extract date and time details from the JSON file on S3
-date_times_data = extractor.extract_from_s3_json(s3_date_times_link)
-
-# Clean date and time details
-cleaned_date_times_data = cleaner.clean_date_times_data(date_times_data)
-
-# Upload cleaned date and time details to the database
-engine = connector.init_db_engine()
-connector.upload_to_db(engine, 'dim_date_times', cleaned_date_times_data)
-
-orders_table = DataCleaning.clean_orders_data(orders_table)
-
-dim_users_table = DataCleaning.clean_dim_users_data(dim_users_table)
-
-def execute_sql_script(script_path, connection_params):
-    """
-    Execute an SQL script.
-
-    Parameters:
-    - script_path (str): Path to the SQL script file.
-    - connection_params (dict): Database connection parameters.
-
-    Returns:
-    - None
-    """
-    # Establish a database connection
-    conn = psycopg2.connect(**connection_params)
-    cursor = conn.cursor()
-
-    # Read and execute the SQL script
-    with open(script_path, "r") as file:
-        sql_script = file.read()
-        cursor.execute(sql_script)
-
-    # Commit the changes and close the connection
-    conn.commit()
-    cursor.close()
-    conn.close()
-
-if __name__ == "__main__":
-    # Replace these with your actual database connection parameters
-    database_params = {
-        'database': 'your_database',
-        'user': 'your_user',
-        'password': 'your_password',
-        'host': 'your_host',
-        'port': 'your_port'
-    }
-
-    # Execute the dim_products_update SQL script
-    execute_sql_script("/Users/Rit/Workspace/Retail-Data/sql/migrations/dim_products_update.sql", database_params)
-
-    # Execute the store_detail_update SQL script
-    execute_sql_script("/Users/Rit/Workspace/Retail-Data/sql/migrations/store_detail_update.sql", database_params)
-
-    # Execute the dim_card_details_data_types SQL script
-    execute_sql_script("/Users/Rit/Workspace/Retail-Data/sql/migrations/dim_card_details_data_types.sql", database_params)
-
-    # Execute the dim_date_times_data_types SQL script
-    execute_sql_script("/Users/Rit/Workspace/Retail-Data/sql/migrations/dim_date_times_data_types.sql", database_params)
-    
-    # Execute the dim_products_data_types SQL script
-    execute_sql_script("/Users/Rit/Workspace/Retail-Data/sql/migrations/dim_products_data_types.sql", database_params)
-
-    # Execute the dim_users_data_types SQL script
-    execute_sql_script("/Users/Rit/Workspace/Retail-Data/sql/migrations/dim_users_data_types.sql", database_params)
-
-    # Execute the primary_keys_foreign_keys SQL script
-    execute_sql_script("/Users/Rit/Workspace/Retail-Data/sql/migrations/primary_keys_foreign_keys.sql", database_params)
-
-    # Execute the dim_store_details_data_types SQL script
-    execute_sql_script("/Users/Rit/Workspace/Retail-Data/sql/migrations/dim_store_details_data_types.sql", database_params)
+# Upload cleaned user data to 'dim_users' table
+db_connector.upload_to_db(cleaned_user_data, 'dim_users', target_database=True)

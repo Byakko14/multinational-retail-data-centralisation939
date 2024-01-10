@@ -1,2 +1,3 @@
 # Ignore database credentials file
 db_creds.yaml
+local_db_creds.yaml
