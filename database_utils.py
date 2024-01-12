@@ -45,6 +45,7 @@ class DatabaseConnector():
         return inspector.get_table_names()
 
     def upload_to_db(self, data, table_name, target_database=False):
+        if_exists='replace'
         """
         Upload data to the specified table in the database.
         If the table does not exist, create it.

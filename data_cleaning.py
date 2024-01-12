@@ -1,6 +1,6 @@
 import pandas as pd
 
-class DataCleaning:
+class DataCleaning():
     @staticmethod
     def clean_user_data(data):
         # Drop rows with any NULL values in relevant columns

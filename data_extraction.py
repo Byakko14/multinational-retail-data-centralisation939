@@ -1,4 +1,5 @@
 import tabula
+from py4j.java_gateway import java_import, JavaGateway
 import pandas as pd
 from sqlalchemy import create_engine
 
@@ -16,6 +17,9 @@ class DataExtractor():
         return pd.read_sql(query, self.engine)
     
     def retrieve_pdf_data(self, pdf_link):
+        # Specify the path to your Java installation
+        java_path = '/Library/Java/JavaVirtualMachines/zulu-21.jdk/Contents/Home'
+
         # Use tabula to extract data from the PDF
         pdf_data = tabula.read_pdf(pdf_link, pages='all', multiple_tables=True)
 
