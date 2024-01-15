@@ -28,6 +28,7 @@ print(cleaned_user_data)
 db_connector.upload_to_db(cleaned_user_data, 'dim_users', target_database=True)
 
 #Retrieve data from PDF
+db_connector = DatabaseConnector(source_creds_file='db_creds.yaml', target_creds_file='local_db_creds.yaml')
 pdf_link = "/Users/Rit/Workspace/Retail-Data/card_details.pdf"
 data_extractor = DataExtractor(db_connector)
 pdf_data = data_extractor.retrieve_pdf_data(pdf_link)
