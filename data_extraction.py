@@ -51,7 +51,7 @@ class DataExtractor():
         if number_of_stores is not None:
             try:
                 stores_data = []
-                for store_number in range(1, number_of_stores + 1):
+                for store_number in range(0, number_of_stores):
                     store_url = f"{endpoint}/{store_number}"  # Correctly construct the URL
                     print(f"Requesting store data from: {store_url}")
                     response = requests.get(store_url, headers=headers)
