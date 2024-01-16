@@ -44,3 +44,22 @@ class DataExtractor():
                 print("Error: 'number_stores' key not found in the response.")
         else:
             print(f"Error: {response.status_code}")
+
+    def retrieve_store_data(self, retrieve_a_store_endpoint):
+        stores_data = []
+
+        # Iterate through each store and retrieve its data
+        for store_number in range(0, 451):
+            store_url = f"{retrieve_a_store_endpoint}/{store_number}"
+            response = requests.get(store_url)
+
+            if response.status_code == 200:
+                store_data = response.json()
+                stores_data.append(store_data)
+            else:
+                print(f"Failed to retrieve data for store {store_number}")
+
+        # Convert the list of dictionaries into a DataFrame
+        stores_df = pd.DataFrame(stores_data)
+
+        return stores_df
