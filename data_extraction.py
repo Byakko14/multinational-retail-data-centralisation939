@@ -4,8 +4,8 @@ import requests
 
 class DataExtractor():
     def __init__(self, database_connector):
-        self.engine = database_connector.source_engine
-        self.database_connector = database_connector
+        self.header = {'x-api-key': 'yFBQbwXe9J3sd6zWVAMrK6lcxxr0q1lr2PT6DDMX'}
+        self.base_url = 'https://aqj7u5id95.execute-api.eu-west-1.amazonaws.com/prod'
 
     def read_rds_table(self, table_name):
         """
@@ -27,46 +27,20 @@ class DataExtractor():
         extracted_data = pd.concat(pdf_data, ignore_index=True)
 
         return extracted_data
+        
+    def list_number_of_stores(self, number_of_stores_endpoint, headers):
+        response = requests.get(number_of_stores_endpoint, headers=headers)
 
-    def list_number_of_stores(self, endpoint, headers):
-        response = requests.get(endpoint, headers=headers)
-
-        print(f"API Response Code: {response.status_code}")
-        print(f"API Response Content: {response.text}")
-
+        # Check if the request was successful (status code 200)
         if response.status_code == 200:
-            try:
-                return response.json().get('number_stores')
-            except Exception as e:
-                print(f"Error parsing response content: {e}")
+            # Parse the JSON response
+            data = response.json()
+
+            # Extract and return the number of stores
+            number_of_stores = data.get('number_stores')
+            if number_of_stores is not None:
+                return number_of_stores
+            else:
+                print("Error: 'number_stores' key not found in the response.")
         else:
-            print(f"Failed to retrieve the number of stores. Response content: {response.text}")
-
-        return None
-    
-    def retrieve_stores_data(self, endpoint, headers):
-        # Assuming number_of_stores is obtained from list_number_of_stores
-        number_of_stores = self.list_number_of_stores(endpoint, headers)
-
-        if number_of_stores is not None:
-            try:
-                stores_data = []
-                for store_number in range(0, number_of_stores):
-                    store_url = f"{endpoint}/{store_number}"  # Correctly construct the URL
-                    print(f"Requesting store data from: {store_url}")
-                    response = requests.get(store_url, headers=headers)
-                    
-                    # Check if the response is successful
-                    if response.status_code == 200:
-                        store_json = response.json()
-                        stores_data.append(store_json)
-                        print(f"Received store data: {store_json}")
-                    else:
-                        print(f"Failed to retrieve store data. Response content: {response.content}")
-
-                return stores_data
-            except requests.exceptions.RequestException as e:
-                print(f"Failed to retrieve store data. Error: {e}")
-        else:
-            print("Failed to retrieve the number of stores.")
-        return None
+            print(f"Error: {response.status_code}")
