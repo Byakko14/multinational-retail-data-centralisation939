@@ -1,6 +1,6 @@
 import pandas as pd
 import yaml
-from sqlalchemy import create_engine, MetaData, inspect
+from sqlalchemy import create_engine, inspect
 
 class DatabaseConnector():
     def __init__(self, source_creds_file='db_creds.yaml', target_creds_file='local_db_creds.yaml'):
