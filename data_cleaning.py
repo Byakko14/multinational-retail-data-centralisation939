@@ -36,3 +36,15 @@ class DataCleaning():
         # Additional cleaning logic for card data if needed
 
         return cleaned_data
+    
+    def clean_store_data(self, data):
+        if data is None:
+            # Handle the case where data is None
+            return pd.DataFrame()  # or any other appropriate action
+
+        # Drop rows with any NULL values
+        cleaned_data = data.dropna()
+        
+        # Additional cleaning logic for card data if needed
+
+        return cleaned_data
