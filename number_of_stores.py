@@ -18,5 +18,5 @@ print(number_of_stores)
 
 print(type(number_of_stores))
 
-stores_data = data_extractor.retrieve_store_data(retrieve_a_store_endpoint)
+stores_data = data_extractor.retrieve_store_data(retrieve_a_store_endpoint, headers=headers)
 print(stores_data)
