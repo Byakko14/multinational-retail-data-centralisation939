@@ -63,9 +63,10 @@ class DataExtractor():
         # Convert the list of dictionaries into a DataFrame
         stores_df = pd.DataFrame(stores_data)
 
+       
         return stores_df
+    
     """
-
     def retrieve_store_data(self, retrieve_a_store_endpoint):
         stores_data = []
 
