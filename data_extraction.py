@@ -72,7 +72,7 @@ class DataExtractor():
         stores_data = []
 
         # Iterate through each store and retrieve its data
-        for store_number in range(1, 450):
+        for store_number in range(0, 450):
             store_url = f"https://aqj7u5id95.execute-api.eu-west-1.amazonaws.com/prod/store_details/{store_number}"
             response = requests.get(store_url, headers=headers)
 
