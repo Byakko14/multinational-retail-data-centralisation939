@@ -2,13 +2,18 @@ import tabula
 import pandas as pd
 import requests
 from sqlalchemy import create_engine
+import boto3
+from io import StringIO
 
 class DataExtractor():
-    def __init__(self, database_connector):
+    def __init__(self, database_connector, aws_access_key, aws_secret_key, aws_region):
         self.header = {'x-api-key': 'yFBQbwXe9J3sd6zWVAMrK6lcxxr0q1lr2PT6DDMX'}
         self.base_url = 'https://aqj7u5id95.execute-api.eu-west-1.amazonaws.com/prod'
         self.engine = database_connector.source_engine
         self.database_connector = database_connector
+        self.aws_access_key = aws_access_key
+        self.aws_secret_key = aws_secret_key
+        self.aws_region = aws_region
 
     def read_rds_table(self, table_name):
         """
@@ -68,3 +73,21 @@ class DataExtractor():
         stores_df = pd.DataFrame(stores_data)
        
         return stores_df
+
+    def extract_from_s3(self, s3_address):
+        # Create an S3 client
+        s3 = boto3.client('s3', aws_access_key_id=self.aws_access_key, aws_secret_access_key=self.aws_secret_key, region_name=self.aws_region)
+
+        # Split the S3 address into bucket name and object key
+        bucket_name, object_key = s3_address.split('://')[1].split('/', 1)
+
+        # Download the file from S3
+        response = s3.get_object(Bucket=bucket_name, Key=object_key)
+
+        # Read CSV data from the response
+        csv_data = response['Body'].read().decode('utf-8')
+
+        # Create a Pandas DataFrame from CSV data
+        df = pd.read_csv(StringIO(csv_data))
+
+        return df
