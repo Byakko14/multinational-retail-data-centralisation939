@@ -4,7 +4,7 @@ from data_cleaning import DataCleaning
 
 # Example usage
 aws_access_key = 'AKIAYT5JFYQQZAFAQWRO'
-aws_secret_key = 'TmvVKmRdAJH7M6URMI/zdarDiUYT6oXP23oZMb2E'
+aws_secret_key = 
 aws_region = 'eu-west-2'
 
 database_connector = DatabaseConnector()
