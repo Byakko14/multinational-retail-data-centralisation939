@@ -49,7 +49,8 @@ number_of_stores = data_extractor.list_number_of_stores(number_of_stores_endpoin
 stores_data = data_extractor.retrieve_store_data(retrieve_a_store_endpoint, headers=headers)
 
 #Clean store data
-cleaned_store_data = data_cleaner.clean_store_data(stores_data)
+#cleaned_store_data = data_cleaner.clean_store_data(stores_data)
 
 #Upload cleaned data to the database
-db_connector.upload_to_db(cleaned_store_data, 'dim_store_details', target_database=True)
+#db_connector.upload_to_db(cleaned_store_data, 'dim_store_details', target_database=True)
+db_connector.upload_to_db(stores_data, 'dim_store_details', target_database=True)
