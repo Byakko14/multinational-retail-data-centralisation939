@@ -3,7 +3,7 @@ from data_extraction import DataExtractor
 from data_cleaning import DataCleaning
 
 # Example usage
-aws_access_key = 'AKIAYT5JFYQQZAFAQWRO'
+aws_access_key = 'access_key'
 aws_secret_key = 'secret_key'
 aws_region = 'eu-west-2'
 
