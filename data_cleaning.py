@@ -1,4 +1,5 @@
 import pandas as pd
+import re
 
 class DataCleaning():
     @staticmethod
@@ -48,3 +49,35 @@ class DataCleaning():
         # Additional cleaning logic for card data if needed
 
         return cleaned_data
+    
+    def convert_product_weights(self, products_data):
+        # Function to clean and convert weights
+        def clean_and_convert(weight):
+            # Remove excess characters and spaces
+            cleaned_weight = re.sub(r'[^\d.]', '', str(weight))
+
+            # Convert to kg
+            if 'kg' in str(weight).lower():
+                cleaned_weight = float(cleaned_weight)
+            elif 'g' in str(weight).lower():
+                cleaned_weight = float(cleaned_weight) / 1000  # Convert grams to kilograms
+            elif 'ml' in str(weight).lower():
+                cleaned_weight = float(cleaned_weight) / 1000  # Convert milliliters to kilograms
+
+            return cleaned_weight
+
+        # Apply the clean_and_convert function to the 'weight' column
+        products_data['weight'] = products_data['weight'].apply(clean_and_convert)
+
+        return products_data
+    
+    def clean_products_data(self, products_data):
+        # Drop rows with missing values
+        products_data = products_data.dropna()
+
+        # Remove duplicate rows
+        products_data = products_data.drop_duplicates()
+
+        # Clean any additional erroneous values based on specific criteria
+
+        return products_data
