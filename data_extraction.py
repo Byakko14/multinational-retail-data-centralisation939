@@ -6,10 +6,11 @@ import boto3
 from io import StringIO
 
 class DataExtractor():
-    def __init__(self, database_connector):
+    def __init__(self, database_connector, database_url):
         self.header = {'x-api-key': 'yFBQbwXe9J3sd6zWVAMrK6lcxxr0q1lr2PT6DDMX'}
         self.base_url = 'https://aqj7u5id95.execute-api.eu-west-1.amazonaws.com/prod'
-        self.engine = database_connector.source_engine
+        self.engine = create_engine(database_url)
+        #self.engine = database_connector.source_engine
         self.database_connector = database_connector
 
     def read_rds_table(self, table_name):
