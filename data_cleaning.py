@@ -81,3 +81,15 @@ class DataCleaning():
         # Clean any additional erroneous values based on specific criteria
 
         return products_data
+    
+    def clean_orders_data(self, all_tables):
+        cleaned_tables = []
+
+        for table_data in all_tables:
+            # Assuming each table has a 'first_name', 'last_name', and '1' column
+            # If not, you may need to adjust this part based on your actual table structure
+            if isinstance(table_data, pd.DataFrame):
+                cleaned_table = table_data.drop(columns=['first_name', 'last_name', '1'], errors='ignore')
+                cleaned_tables.append(cleaned_table)
+
+        return cleaned_tables
