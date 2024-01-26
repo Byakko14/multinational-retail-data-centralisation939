@@ -6,11 +6,11 @@ import boto3
 from io import StringIO
 
 class DataExtractor():
-    def __init__(self, database_connector, database_url):
+    def __init__(self, database_connector): # need to add database_url for orders_data
         self.header = {'x-api-key': 'yFBQbwXe9J3sd6zWVAMrK6lcxxr0q1lr2PT6DDMX'}
         self.base_url = 'https://aqj7u5id95.execute-api.eu-west-1.amazonaws.com/prod'
-        self.engine = create_engine(database_url)
-        #self.engine = database_connector.source_engine
+        #self.engine = create_engine(database_url) # for extracting and comnbining orders_data
+        self.engine = database_connector.source_engine
         self.database_connector = database_connector
 
     def read_rds_table(self, table_name):
@@ -50,7 +50,6 @@ class DataExtractor():
                 print("Error: 'number_stores' key not found in the response.")
         else:
             print(f"Error: {response.status_code}")
-
     
     def retrieve_store_data(self, retrieve_a_store_endpoint, headers):
         
@@ -87,5 +86,23 @@ class DataExtractor():
 
         # Create a Pandas DataFrame from CSV data
         df = pd.read_csv(StringIO(csv_data))
+
+        return df
+    
+    def extract_json_from_s3(self, s3_address):
+        # Create an S3 client
+        s3 = boto3.client('s3')
+
+        # Split the S3 address into bucket name and object key
+        bucket, file_from_s3 = s3_address.split('://')[1].split('/', 1)
+
+        # Download the file from S3
+        response = s3.get_object(Bucket=bucket, Key=file_from_s3)
+
+        # Read JSON data from the response
+        json_data = response['Body'].read().decode('utf-8')
+
+        # Create a Pandas DataFrame from JSON data
+        df = pd.read_json(StringIO(json_data))
 
         return df

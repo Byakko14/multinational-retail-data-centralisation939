@@ -1,6 +1,9 @@
 from database_utils import DatabaseConnector
 from data_extraction import DataExtractor
 from data_cleaning import DataCleaning
+import pandas as pd
+
+database_url = 'postgresql://postgres:admin123@localhost:5432/sales_data'
 
 # Assuming db_connector is an instance of DatabaseConnector
 db_connector = DatabaseConnector(source_creds_file='db_creds.yaml', target_creds_file='local_db_creds.yaml')
@@ -72,3 +75,35 @@ cleaned_weights_df = data_cleaner.convert_product_weights(final_cleaned_df)
 
 # Upload to database
 db_connector.upload_to_db(cleaned_weights_df, 'dim_products', target_database=True)
+
+# List all tables in database
+all_tables = db_connector.list_db_tables(database_url)
+print(all_tables)
+
+# Extracting order data
+dim_card_details_data = data_extractor.read_rds_table('dim_card_details')
+dim_products_data = data_extractor.read_rds_table('dim_products')
+dim_users_data = data_extractor.read_rds_table('dim_users')
+dim_store_details_data = data_extractor.read_rds_table('dim_store_details')
+
+# Concatenate the tables vertically
+merged_data = pd.concat([dim_card_details_data, dim_products_data, dim_users_data, dim_store_details_data], ignore_index=True, axis = 1)
+
+# Display the merged data
+print("Merged Data:")
+print(merged_data)
+
+# Upload to database
+db_connector.upload_to_db(merged_data, 'orders_table', target_database=True)
+
+# Provide the S3 address for the date data
+s3_address_2 = 's3://data-handling-public/date_details.json'
+
+# Call the extract_from_s3 method to get the Pandas DataFrame
+date_times = data_extractor.extract_json_from_s3(s3_address_2)
+
+# Display the DataFrame
+print(date_times)
+
+# Upload to database
+db_connector.upload_to_db(date_times, 'dim_date_times', target_database=True)

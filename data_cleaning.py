@@ -23,8 +23,6 @@ class DataCleaning():
         # Drop the 'index' column if it exists
         cleaned_data = cleaned_data.drop(columns=['index'], errors='ignore')
 
-        # Additional cleaning logic for other columns if needed
-
         return cleaned_data
     
     def clean_card_data(self, data):
@@ -34,7 +32,6 @@ class DataCleaning():
 
         # Drop rows with any NULL values
         cleaned_data = data.dropna()
-        # Additional cleaning logic for card data if needed
 
         return cleaned_data
     
@@ -45,8 +42,6 @@ class DataCleaning():
 
         # Drop rows with any NULL values
         cleaned_data = data.dropna()
-        
-        # Additional cleaning logic for card data if needed
 
         return cleaned_data
     
@@ -77,8 +72,6 @@ class DataCleaning():
 
         # Remove duplicate rows
         products_data = products_data.drop_duplicates()
-
-        # Clean any additional erroneous values based on specific criteria
 
         return products_data
     

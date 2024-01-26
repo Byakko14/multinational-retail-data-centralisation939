@@ -14,8 +14,6 @@ all_tables = db_connector.list_db_tables(database_url)
 print(all_tables)
 
 dim_card_details_data = data_extractor.read_rds_table('dim_card_details')
-
-dim_card_details_data = data_extractor.read_rds_table('dim_card_details')
 dim_products_data = data_extractor.read_rds_table('dim_products')
 dim_users_data = data_extractor.read_rds_table('dim_users')
 dim_store_details_data = data_extractor.read_rds_table('dim_store_details')
