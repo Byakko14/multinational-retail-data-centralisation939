@@ -3,6 +3,9 @@ from data_extraction import DataExtractor
 from data_cleaning import DataCleaning
 import pandas as pd
 
+# Create a DataCleaning instance
+data_cleaner = DataCleaning()
+
 database_url = 'postgresql://postgres:admin123@localhost:5432/sales_data'
 
 # Assuming db_connector is an instance of DatabaseConnector
@@ -16,9 +19,6 @@ user_table_name = 'legacy_users'
 
 # Extract data from the user table
 user_data = data_extractor.read_rds_table(user_table_name)
-
-# Create a DataCleaning instance
-data_cleaner = DataCleaning()
 
 # Clean the user data
 cleaned_user_data = data_cleaner.clean_user_data(user_data)

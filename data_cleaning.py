@@ -43,6 +43,10 @@ class DataCleaning():
         # Drop rows with any NULL values
         cleaned_data = data.dropna()
 
+        # Convert date columns to YYYY-MM-DD format
+        date_columns = cleaned_data.select_dtypes(include=['datetime']).columns
+        cleaned_data[date_columns] = cleaned_data[date_columns].apply(lambda x: x.dt.strftime('%Y-%m-%d'))
+
         return cleaned_data
     
     def convert_product_weights(self, products_data):
