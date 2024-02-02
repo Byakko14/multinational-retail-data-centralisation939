@@ -36,3 +36,21 @@ DROP COLUMN join_date;
 -- Rename the new column to 'join_date'
 ALTER TABLE dim_users
 RENAME COLUMN new_join_date TO join_date;
+
+-- Create a temporary table to store distinct records
+CREATE TEMPORARY TABLE temp_dim_users AS
+SELECT DISTINCT ON (user_uuid) *
+FROM dim_users;
+
+-- Truncate the original dim_users table
+TRUNCATE TABLE dim_users;
+
+-- Insert the distinct records back into dim_users
+INSERT INTO dim_users
+SELECT * FROM temp_dim_users;
+
+-- Drop the temporary table
+DROP TABLE IF EXISTS temp_dim_users;
+
+ALTER TABLE dim_users
+ADD CONSTRAINT pk_dim_users_user_uuid PRIMARY KEY (user_uuid);

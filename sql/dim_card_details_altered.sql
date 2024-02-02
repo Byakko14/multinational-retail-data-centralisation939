@@ -41,3 +41,18 @@ WHERE date_payment_confirmed !~ '^\d{4}-\d{2}-\d{2}$';
 -- Alter the column to the DATE data type
 ALTER TABLE dim_card_details
 ALTER COLUMN date_payment_confirmed TYPE DATE USING date_payment_confirmed::date;
+
+-- Find rows with NULL values
+SELECT * FROM dim_card_details WHERE card_number IS NULL;
+
+-- Find rows with duplicate values
+SELECT card_number, COUNT(*)
+FROM dim_card_details
+GROUP BY card_number
+HAVING COUNT(*) > 1;
+
+DELETE FROM dim_card_details
+WHERE card_number IS NULL OR card_number = 'NULL';
+
+ALTER TABLE dim_card_details
+ADD CONSTRAINT pk_dim_card_details_card_number PRIMARY KEY (card_number);

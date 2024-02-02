@@ -39,3 +39,7 @@ ALTER COLUMN time_period TYPE VARCHAR(255);
 -- Alter the data type of date_uuid to UUID
 ALTER TABLE dim_date_times
 ALTER COLUMN date_uuid TYPE UUID USING date_uuid::uuid;
+
+-- Adding primary key
+ALTER TABLE dim_date_times
+ADD CONSTRAINT pk_dim_date_times_date_uuid PRIMARY KEY (date_uuid);

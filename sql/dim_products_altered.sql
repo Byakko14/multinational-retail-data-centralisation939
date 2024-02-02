@@ -77,3 +77,6 @@ SET still_available = (CASE
 
 ALTER TABLE dim_products
 ALTER COLUMN still_available TYPE BOOLEAN USING still_available::boolean;
+
+ALTER TABLE dim_products
+ADD CONSTRAINT pk_dim_products_product_code PRIMARY KEY (product_code);
