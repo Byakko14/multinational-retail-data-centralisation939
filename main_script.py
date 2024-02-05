@@ -50,7 +50,7 @@ retrieve_a_store_endpoint = "https://aqj7u5id95.execute-api.eu-west-1.amazonaws.
 data_extractor.list_number_of_stores(number_of_stores_endpoint, headers)
 number_of_stores = data_extractor.list_number_of_stores(number_of_stores_endpoint, headers)
 stores_data = data_extractor.retrieve_store_data(retrieve_a_store_endpoint, headers=headers)
-
+ 
 #Clean store data
 #cleaned_store_data = data_cleaner.clean_store_data(stores_data)
 
