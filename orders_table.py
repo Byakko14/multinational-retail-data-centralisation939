@@ -13,14 +13,18 @@ all_tables = db_connector.list_db_tables(database_url)
 
 print(all_tables)
 
+orders_table = data_extractor.read_rds_table(all_tables)
+
+"""
 dim_card_details_data = data_extractor.read_rds_table('dim_card_details')
 dim_products_data = data_extractor.read_rds_table('dim_products')
 dim_users_data = data_extractor.read_rds_table('dim_users')
 dim_store_details_data = data_extractor.read_rds_table('dim_store_details')
 dim_date_times_data = data_extractor.read_rds_table('dim_date_times')
+"""
 
 # Concatenate the tables horizontally
-merged_data = pd.concat([dim_card_details_data, dim_products_data, dim_users_data, dim_store_details_data, dim_date_times_data], ignore_index=True, axis=1)
+#merged_data = pd.concat([dim_card_details_data, dim_products_data, dim_users_data, dim_store_details_data, dim_date_times_data], ignore_index=True, axis=1)
 
 # Upload to database
-db_connector.upload_to_db(merged_data, 'orders_table_test', target_database=True)
+#db_connector.upload_to_db(orders_table, 'orders_table_test', target_database=True)
